@@ -2,8 +2,10 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const app = express();
+
 app.use(cors());
 app.use(express.json());
+app.use(express.static("build"));
 // log all stuff using tiny, but show data when post?
 app.use(
   morgan(function (tokens, req, res) {
