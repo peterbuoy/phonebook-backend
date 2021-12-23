@@ -73,8 +73,9 @@ app.post("/api/persons", (req, res) => {
       error: "name must be unique",
     });
   }
-  persons.push({ id: id, name: name, number: number });
-  res.send("person added");
+  let validatedPerson = { id: id, name: name, number: number };
+  persons.push(validatedPerson);
+  res.send(validatedPerson);
 });
 
 app.get("/api/persons", (req, res) => {

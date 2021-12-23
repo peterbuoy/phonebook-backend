@@ -1,0 +1,15 @@
+@baseURL = https://pure-lowlands-40590.herokuapp.com/api/persons
+
+POST {{baseURL}} HTTP/1.1
+Content-Type: application/json
+
+{
+	"name": "Artoz Hellas",
+	"number": 12345
+}
+###
+GET {{baseURL}}
+
+###
+DELETE {{baseURL}}/8218
+
