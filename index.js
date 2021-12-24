@@ -109,11 +109,13 @@ app.delete("/api/persons/:id", (request, response, next) => {
     })
     .catch((error) => next(error));
 });
-// fix meee
+
 app.get("/info", (req, res) => {
-  res.send(
-    `<p>Phonebook has info for ${persons.length} people</p>
-		<p>${Date()}</p>`
+  const count = Person.estimatedDocumentCount().then((count) =>
+    res.send(
+      `<p>Phonebook has info for ${count} people</p>
+			<p>${Date()}</p>`
+    )
   );
 });
 
