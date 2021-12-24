@@ -4,6 +4,7 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const app = express();
+const Person = require("./models/person");
 
 app.use(cors());
 app.use(express.json());
@@ -32,26 +33,6 @@ app.use(
 // The response body is a json object so stringify turns it into a string,
 // The return on morgan.token() MUST be a string value
 // morgan.token("data", (req, res) => JSON.stringify(req.body));
-
-const mongoose = require("mongoose");
-const url = process.env.MONGO_DB_URI;
-
-mongoose.connect(url);
-
-const personSchema = new mongoose.Schema({
-  name: String,
-  number: String,
-});
-
-personSchema.set("toJSON", {
-  transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
-    delete returnedObject._id;
-    delete returnedObject.__v;
-  },
-});
-
-const Person = mongoose.model("Person", personSchema);
 
 let persons = [
   {
