@@ -5,7 +5,6 @@ const cors = require("cors");
 const morgan = require("morgan");
 const app = express();
 const Person = require("./models/person");
-const { response } = require("express");
 
 app.use(cors());
 app.use(express.json());
@@ -37,7 +36,6 @@ app.use(
 // morgan.token("data", (req, res) => JSON.stringify(req.body));
 
 app.post("/api/persons", (req, res) => {
-  const id = Math.floor(Math.random() * 10000);
   const name = req.body.name;
   const number = req.body.number;
   if (!name) {
@@ -50,8 +48,6 @@ app.post("/api/persons", (req, res) => {
       error: "You must provide a number",
     });
   }
-  // name is not unique
-  // need to implement by checking mongodb
   const validatedPerson = new Person({
     name: name,
     number: number,
@@ -62,9 +58,11 @@ app.post("/api/persons", (req, res) => {
 });
 
 app.get("/api/persons", (req, res) => {
-  Person.find({}).then((persons) => {
-    res.json(persons);
-  });
+  Person.find({})
+    .then((persons) => {
+      res.json(persons);
+    })
+    .catch((error) => next(error));
 });
 
 app.get("/api/persons/:id", (req, res, next) => {
@@ -80,6 +78,30 @@ app.get("/api/persons/:id", (req, res, next) => {
     .catch((error) => next(error));
 });
 
+app.put("/api/persons/:id", (request, response, next) => {
+  const name = request.body.name;
+  const number = request.body.number;
+  if (!name) {
+    return res.status(400).json({
+      error: "You must provide a name",
+    });
+  }
+  if (!number) {
+    return res.status(400).json({
+      error: "You must provide a number",
+    });
+  }
+  const validatedPerson = {
+    name: name,
+    number: number,
+  };
+  Person.findByIdAndUpdate(request.params.id, validatedPerson)
+    .then((updatedPerson) => {
+      response.json(updatedPerson);
+    })
+    .catch((error) => next(error));
+});
+
 app.delete("/api/persons/:id", (request, response, next) => {
   Person.findByIdAndRemove(request.params.id)
     .then((result) => {
@@ -87,7 +109,7 @@ app.delete("/api/persons/:id", (request, response, next) => {
     })
     .catch((error) => next(error));
 });
-
+// fix meee
 app.get("/info", (req, res) => {
   res.send(
     `<p>Phonebook has info for ${persons.length} people</p>

@@ -16,5 +16,14 @@ GET {{URL}}/61c43a7fb6c8394614aa8acd
 GET {{URL}}
 
 ###
+PUT {{URL}}/61c444a40f99a27566ff5785
+Content-Type: application/json
+
+{
+	"name": "Joe",
+	"number": "12345"
+}
+
+###
 DELETE {{URL}}/61c43a7fb6c8394614aa8acd
 
