@@ -59,7 +59,7 @@ app.post("/api/persons", (req, res) => {
     name: name,
     number: number,
   });
-  person.save().then((savedPerson) => {
+  validatedPerson.save().then((savedPerson) => {
     res.json(savedPerson);
   });
 });
