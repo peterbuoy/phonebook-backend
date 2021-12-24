@@ -5,6 +5,7 @@ const cors = require("cors");
 const morgan = require("morgan");
 const app = express();
 const Person = require("./models/person");
+const { response } = require("express");
 
 app.use(cors());
 app.use(express.json());
@@ -29,6 +30,7 @@ app.use(
     ].join(" ");
   })
 );
+
 // Defining :data as a custom token in Morgan
 // The response body is a json object so stringify turns it into a string,
 // The return on morgan.token() MUST be a string value
@@ -65,7 +67,7 @@ app.get("/api/persons", (req, res) => {
   });
 });
 
-app.get("/api/persons/:id", (req, res) => {
+app.get("/api/persons/:id", (req, res, next) => {
   Person.findById(req.params.id)
     .then((person) => {
       if (person) {
@@ -75,16 +77,15 @@ app.get("/api/persons/:id", (req, res) => {
         res.status(404).end();
       }
     })
-    .catch((error) => {
-      console.log(error);
-      res.status(400).send({ error: "malformed id" });
-    });
+    .catch((error) => next(error));
 });
 
-app.delete("/api/persons/:id", (req, res) => {
-  const id = Number(req.params.id);
-  persons = persons.filter((person) => person.id !== id);
-  res.send(`deleted ${id}`);
+app.delete("/api/persons/:id", (request, response, next) => {
+  Person.findByIdAndRemove(request.params.id)
+    .then((result) => {
+      response.status(204).end();
+    })
+    .catch((error) => next(error));
 });
 
 app.get("/info", (req, res) => {
@@ -98,3 +99,12 @@ const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+const errorHandler = (error, req, res, next) => {
+  console.log(error.message);
+  if (error.name === "CastError") {
+    return response.status(400).send({ error: "malformed id" });
+  }
+  next(error);
+};
+app.use(errorHandler);

@@ -9,10 +9,12 @@ Content-Type: application/json
 	"number": "12345"
 }
 ###
-GET {{baseURL}}
+GET {{URL}}/102490124
 ###
-GET {{baseURL}}/61c43a610a03f8c2698844ae 
+GET {{URL}}/61c43a7fb6c8394614aa8acd
+###
+GET {{URL}}
 
 ###
-DELETE {{baseURL}}/8218
+DELETE {{URL}}/61c43a7fb6c8394614aa8acd
 
