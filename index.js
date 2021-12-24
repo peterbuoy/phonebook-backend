@@ -32,7 +32,7 @@ app.use(
 // morgan.token("data", (req, res) => JSON.stringify(req.body));
 
 const mongoose = require("mongoose");
-const url = `mongodb+srv://peterbuoy:${password}@phonebook.hgasq.mongodb.net/phonebook?retryWrites=true&w=majority`;
+const url = `mongodb+srv://peterbuoy:${process.env.MONGO_DB_PASSWORD}@phonebook.hgasq.mongodb.net/phonebook?retryWrites=true&w=majority`;
 
 mongoose.connect(url);
 
