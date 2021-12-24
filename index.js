@@ -34,29 +34,6 @@ app.use(
 // The return on morgan.token() MUST be a string value
 // morgan.token("data", (req, res) => JSON.stringify(req.body));
 
-let persons = [
-  {
-    id: 1,
-    name: "Arto Hellas",
-    number: "040-123456",
-  },
-  {
-    id: 2,
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-  },
-  {
-    id: 3,
-    name: "Dan Abramov",
-    number: "12-43-234345",
-  },
-  {
-    id: 4,
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-  },
-];
-
 app.post("/api/persons", (req, res) => {
   const id = Math.floor(Math.random() * 10000);
   const name = req.body.name;
@@ -78,9 +55,13 @@ app.post("/api/persons", (req, res) => {
       error: "name must be unique",
     });
   }
-  let validatedPerson = { id: id, name: name, number: number };
-  persons.push(validatedPerson);
-  res.send(validatedPerson);
+  const validatedPerson = new Person({
+    name: name,
+    number: number,
+  });
+  person.save().then((savedPerson) => {
+    res.json(savedPerson);
+  });
 });
 
 app.get("/api/persons", (req, res) => {
@@ -90,14 +71,18 @@ app.get("/api/persons", (req, res) => {
 });
 
 app.get("/api/persons/:id", (req, res) => {
-  const id = Number(req.params.id);
-  const person = persons.find((person) => person.id == id);
-  if (person) {
+  Person.findById(req.params.id).then((person) => {
+    console.log(req.params.id);
     res.json(person);
-  } else {
-    res.status(404);
-    res.send("There was no person found with the given id.");
-  }
+  });
+  // const id = Number(req.params.id);
+  // const person = persons.find((person) => person.id == id);
+  // if (person) {
+  //   res.json(person);
+  // } else {
+  //   res.status(404);
+  //   res.send("There was no person found with the given id.");
+  // }
 });
 
 app.delete("/api/persons/:id", (req, res) => {
