@@ -31,6 +31,18 @@ app.use(
 // The return on morgan.token() MUST be a string value
 // morgan.token("data", (req, res) => JSON.stringify(req.body));
 
+const mongoose = require("mongoose");
+const url = `mongodb+srv://peterbuoy:${password}@phonebook.hgasq.mongodb.net/phonebook?retryWrites=true&w=majority`;
+
+mongoose.connect(url);
+
+const personSchema = new mongoose.Schema({
+  name: String,
+  number: String,
+});
+
+const Person = mongoose.model("Person", personSchema);
+
 let persons = [
   {
     id: 1,
@@ -81,7 +93,9 @@ app.post("/api/persons", (req, res) => {
 });
 
 app.get("/api/persons", (req, res) => {
-  res.json(persons);
+  Person.find({}).then((persons) => {
+    res.json(persons);
+  });
 });
 
 app.get("/api/persons/:id", (req, res) => {
