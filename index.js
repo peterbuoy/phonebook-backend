@@ -49,12 +49,12 @@ app.post("/api/persons", (req, res) => {
     });
   }
   // name is not unique
-  const isNameUnique = () => !persons.some((person) => person.name == name);
-  if (!isNameUnique()) {
-    return res.status(400).json({
-      error: "name must be unique",
-    });
-  }
+  // const isNameUnique = () => !persons.some((person) => person.name == name);
+  // if (!isNameUnique()) {
+  //   return res.status(400).json({
+  //     error: "name must be unique",
+  //   });
+  // }
   const validatedPerson = new Person({
     name: name,
     number: number,
@@ -75,14 +75,6 @@ app.get("/api/persons/:id", (req, res) => {
     console.log(req.params.id);
     res.json(person);
   });
-  // const id = Number(req.params.id);
-  // const person = persons.find((person) => person.id == id);
-  // if (person) {
-  //   res.json(person);
-  // } else {
-  //   res.status(404);
-  //   res.send("There was no person found with the given id.");
-  // }
 });
 
 app.delete("/api/persons/:id", (req, res) => {
