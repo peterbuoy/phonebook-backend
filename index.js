@@ -49,12 +49,7 @@ app.post("/api/persons", (req, res) => {
     });
   }
   // name is not unique
-  // const isNameUnique = () => !persons.some((person) => person.name == name);
-  // if (!isNameUnique()) {
-  //   return res.status(400).json({
-  //     error: "name must be unique",
-  //   });
-  // }
+  // need to implement by checking mongodb
   const validatedPerson = new Person({
     name: name,
     number: number,
@@ -71,10 +66,19 @@ app.get("/api/persons", (req, res) => {
 });
 
 app.get("/api/persons/:id", (req, res) => {
-  Person.findById(req.params.id).then((person) => {
-    console.log(req.params.id);
-    res.json(person);
-  });
+  Person.findById(req.params.id)
+    .then((person) => {
+      if (person) {
+        console.log(req.params.id);
+        res.json(person);
+      } else {
+        res.status(404).end();
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(400).send({ error: "malformed id" });
+    });
 });
 
 app.delete("/api/persons/:id", (req, res) => {
