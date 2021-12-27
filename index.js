@@ -38,6 +38,9 @@ app.use(
 app.post("/api/persons", (req, res) => {
   const name = req.body.name;
   const number = req.body.number;
+  if (body.content === undefined) {
+    return res.status(400).json({ error: "content missing" });
+  }
   if (!name) {
     return res.status(400).json({
       error: "You must provide a name",
@@ -52,9 +55,12 @@ app.post("/api/persons", (req, res) => {
     name: name,
     number: number,
   });
-  validatedPerson.save().then((savedPerson) => {
-    res.json(savedPerson);
-  });
+  validatedPerson
+    .save()
+    .then((savedPerson) => {
+      res.json(savedPerson);
+    })
+    .catch((error) => next(error));
 });
 
 app.get("/api/persons", (req, res) => {
@@ -128,6 +134,8 @@ const errorHandler = (error, req, res, next) => {
   console.log(error.message);
   if (error.name === "CastError") {
     return response.status(400).send({ error: "malformed id" });
+  } else if (error.name === "ValidationError") {
+    return res.status(400).json({ error: error.message });
   }
   next(error);
 };
