@@ -35,12 +35,12 @@ app.use(
 // The return on morgan.token() MUST be a string value
 // morgan.token("data", (req, res) => JSON.stringify(req.body));
 
-app.post("/api/persons", (req, res) => {
+app.post("/api/persons", (req, res, next) => {
   const name = req.body.name;
   const number = req.body.number;
-  if (req.body.content === undefined) {
-    return res.status(400).json({ error: "content missing" });
-  }
+  // if (req.body.content === undefined) {
+  //   return res.status(400).json({ error: "content missing" });
+  // }
   if (!name) {
     return res.status(400).json({
       error: "You must provide a name",
@@ -57,8 +57,9 @@ app.post("/api/persons", (req, res) => {
   });
   validatedPerson
     .save()
-    .then((savedPerson) => {
-      res.json(savedPerson);
+    .then((savedPerson) => savedPerson.toJSON())
+    .then((savedAndFormattedPerson) => {
+      res.json(savedAndFormattedPerson);
     })
     .catch((error) => next(error));
 });

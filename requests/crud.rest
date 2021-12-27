@@ -1,12 +1,12 @@
 @baseURL = https://pure-lowlands-40590.herokuapp.com/api/persons
 @URL = http://localhost:3001/api/persons
 
-POST {{baseURL}} HTTP/1.1
+POST {{URL}} HTTP/1.1
 Content-Type: application/json
 
 {
-	"name": "Wow Hellas",
-	"number": "12345"
+	"name": "Police",
+	"number": "111"
 }
 ###
 GET {{URL}}/102490124
