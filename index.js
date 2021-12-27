@@ -38,7 +38,7 @@ app.use(
 app.post("/api/persons", (req, res) => {
   const name = req.body.name;
   const number = req.body.number;
-  if (body.content === undefined) {
+  if (req.body.content === undefined) {
     return res.status(400).json({ error: "content missing" });
   }
   if (!name) {
